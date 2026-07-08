@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Public Funding Lab | League of California Community Foundations</title>
+<meta name="description" content="A year inside the Public Funding Lab: what California community foundations learned about state and federal dollars, capital stacking, and building a system that lasts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   PUBLIC FUNDING LAB — DESIGN TOKENS
+   Palette built for a bright, working nonprofit
+   feel: sunlight and growth, not corporate navy.
+   ============================================ */
+
+:root{
+  --paper:        #FFFBF1;
+  --paper-dim:    #F4EEDC;
+  --ink:          #17241F;
+  --ink-soft:     #45564E;
+  --marigold:     #F2A63B;
+  --marigold-dim: #FCE7C2;
+  --teal:         #0B6E5F;
+  --teal-dim:     #D7ECE6;
+  --coral:        #E85234;
+  --coral-dim:    #FADAD1;
+  --line:         #D9D0B8;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body:    "Work Sans", -apple-system, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius: 14px;
+  --max-width: 1180px;
+  --edge: clamp(20px, 5vw, 72px);
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+
+body{
+  margin:0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+::selection{ background: var(--marigold); color: var(--ink); }
+
+a{ color: inherit; }
+
+h1,h2,h3,h4{
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+.eyebrow{
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--teal);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before{
+  content:"";
+  width: 22px; height: 2px;
+  background: var(--coral);
+  display:inline-block;
+}
+
+.wrap{
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--edge);
+}
+
+section{ position: relative; }
+
+button, input, textarea{ font-family: inherit; }
+
+/* focus visibility, kept even though we style buttons custom */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible{
+  outline: 3px solid var(--coral);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============ NAV ============ */
+.topnav{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  padding: 18px var(--edge);
+  background: rgba(255,251,241,0.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s ease, box-shadow .3s ease;
+}
+.topnav.scrolled{
+  border-bottom-color: var(--line);
+  box-shadow: 0 6px 24px -18px rgba(0,0,0,0.35);
+}
+.topnav .mark{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color: var(--ink);
+}
+.mark .dot{
+  width:10px; height:10px; border-radius: 3px;
+  background: var(--coral);
+  transform: rotate(45deg);
+  flex: none;
+}
+.topnav nav{
+  display:flex;
+  gap: 28px;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+.topnav nav a{
+  text-decoration:none;
+  color: var(--ink-soft);
+  padding: 6px 2px;
+  border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.topnav nav a:hover{ color: var(--ink); border-color: var(--marigold); }
+.topnav .navtoggle{ display:none; }
+
+@media (max-width: 780px){
+  .topnav nav{ display:none; }
+}
+
+/* ============ HERO ============ */
+.hero{
+  min-height: 100svh;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 90px;
+  overflow: hidden;
+  background:
+    radial-gradient(900px 480px at 84% -8%, var(--marigold-dim) 0%, transparent 60%),
+    radial-gradient(700px 460px at -10% 90%, var(--teal-dim) 0%, transparent 55%);
+}
+
+.hero-grid{
+  display:grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 56px;
+  align-items:center;
+}
+@media (max-width: 900px){
+  .hero-grid{ grid-template-columns: 1fr; }
+}
+
+.hero h1{
+  font-size: clamp(2.5rem, 5.4vw, 4.4rem);
+  color: var(--ink);
+}
+.hero h1 em{
+  font-style: italic;
+  color: var(--teal);
+}
+.hero .lede{
+  margin-top: 22px;
+  max-width: 46ch;
+  font-size: 19px;
+  color: var(--ink-soft);
+}
+.hero .meta-row{
+  margin-top: 34px;
+  display:flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.pill{
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  padding: 8px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-soft);
+}
+.pill strong{ color: var(--ink); }
+
+.hero-cta{
+  margin-top: 38px;
+  display:flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 13px 22px;
+  border-radius: 100px;
+  text-decoration:none;
+  border: 1.5px solid var(--ink);
+  cursor:pointer;
+  transition: transform .18s ease, background .2s ease, color .2s ease;
+}
+.btn:hover{ transform: translateY(-2px); }
+.btn-solid{ background: var(--ink); color: var(--paper); }
+.btn-solid:hover{ background: var(--coral); border-color: var(--coral); }
+.btn-outline{ background: transparent; color: var(--ink); }
+.btn-outline:hover{ background: var(--ink); color: var(--paper); }
+
+/* Signature element: the capital stack */
+.stack-wrap{
+  position: relative;
+  height: 420px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap: 10px;
+}
+.stack-wrap .baseline{
+  position:absolute;
+  bottom: 46px; left: 0; right: 0;
+  height: 1px;
+  background: var(--line);
+}
+.stack-wrap .baseline-label{
+  position:absolute;
+  bottom: 14px; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  text-align:center;
+  white-space: nowrap;
+}
+.stack-col{
+  width: 46px;
+  display:flex;
+  flex-direction:column-reverse;
+  gap: 4px;
+  margin-bottom: 46px;
+}
+.stack-block{
+  border-radius: 5px;
+  height: 0;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: rise 0.7s cubic-bezier(.2,.8,.2,1) forwards;
+}
+@keyframes rise{
+  to{ opacity: 1; transform: translateY(0); }
+}
+.stack-tag{
+  margin-top: 10px;
+  text-align:center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+/* ============ SECTION HEADERS ============ */
+.section-head{
+  max-width: 62ch;
+  margin-bottom: 48px;
+}
+.section-head h2{
+  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+  margin-top: 14px;
+}
+.section-head p{
+  margin-top: 16px;
+  color: var(--ink-soft);
+  font-size: 17px;
+}
+
+.section-pad{ padding: 110px 0; }
+@media (max-width: 780px){ .section-pad{ padding: 76px 0; } }
+
+.band-dim{ background: var(--paper-dim); }
+.band-ink{ background: var(--ink); color: var(--paper); }
+.band-ink .ink-soft{ color: #B8C4BE; }
+.band-ink .section-head p{ color: #C7D0CB; }
+
+/* ============ SPEAKERS ============ */
+.speaker-strip{
+  margin-top: 24px;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+@media (max-width: 880px){ .speaker-strip{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px){ .speaker-strip{ grid-template-columns: 1fr; } }
+.speaker-card{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+}
+.avatar{
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  flex: none;
+}
+.sname{ font-weight: 600; font-size: 14.5px; line-height: 1.3; }
+.srole{ font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+
+/* ============ IN THEIR OWN WORDS ============ */
+.voice-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+@media (max-width: 880px){ .voice-grid{ grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px){ .voice-grid{ grid-template-columns: 1fr; } }
+
+.voice-card{
+  background: var(--paper-dim);
+  border-left: 3px solid var(--teal);
+  border-radius: 8px;
+  padding: 22px 24px;
+}
+.vmonth{
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.vquote{
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.42;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* ============ WHY NOW ============ */
+.why-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items:start;
+}
+@media (max-width: 880px){ .why-grid{ grid-template-columns: 1fr; } }
+
+.why-copy p{ margin: 0 0 18px; color: var(--ink-soft); font-size: 16.5px; }
+.why-copy p:last-child{ margin-bottom: 0; }
+.why-copy strong{ color: var(--ink); }
+
+.season-card{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 30px;
+}
+.season-card .eyebrow{ margin-bottom: 14px; }
+.season-track{
+  display:flex;
+  align-items:center;
+  gap: 0;
+  margin: 26px 0 10px;
+}
+.season-stop{
+  flex:1;
+  text-align:center;
+  position:relative;
+}
+.season-stop .node{
+  width: 14px; height:14px;
+  border-radius:50%;
+  background: var(--paper);
+  border: 2.5px solid var(--teal);
+  margin: 0 auto 10px;
+  position:relative;
+  z-index:2;
+}
+.season-stop.active .node{ background: var(--coral); border-color: var(--coral); }
+.season-stop .lbl{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.season-line{
+  position:absolute;
+  top: 6px; left: 0; right: 0;
+  height: 2px;
+  background: var(--line);
+}
+.season-track-wrap{ position:relative; }
+
+/* ============ JOURNEY ============ */
+.journey-list{
+  display:flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+.journey-item{
+  border-bottom: 1px solid var(--line);
+}
+.journey-head{
+  display:flex;
+  align-items:center;
+  gap: 24px;
+  width: 100%;
+  padding: 26px 0;
+  background: none;
+  border: none;
+  text-align:left;
+  cursor: pointer;
+  list-style: none;
+}
+.journey-item summary::-webkit-details-marker{ display:none; }
+.journey-item summary{ cursor:pointer; }
+
+.jmonth{
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--teal);
+  width: 96px;
+  flex: none;
+  padding-top: 4px;
+}
+.jbody{ flex: 1; min-width: 0; }
+.jtitle{
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  font-weight: 600;
+  display:flex;
+  align-items:baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.jspeaker{
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.jtag{
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 5px 10px;
+  border-radius: 100px;
+  color: var(--ink);
+}
+.jchevron{
+  flex: none;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition: transform .25s ease;
+}
+.journey-item[open] .jchevron{ transform: rotate(45deg); }
+
+.journey-panel{
+  padding: 0 0 34px 120px;
+  max-width: 820px;
+}
+@media (max-width: 700px){
+  .journey-head{ flex-wrap: wrap; }
+  .jmonth{ width: auto; }
+  .journey-panel{ padding-left: 0; }
+}
+
+.journey-panel .topline{
+  font-size: 16.5px;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+.journey-panel ul{
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--ink-soft);
+}
+.journey-panel li{ margin-bottom: 8px; }
+.jquote{
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 18px;
+  border-left: 3px solid var(--marigold);
+  padding-left: 18px;
+  margin: 18px 0;
+  color: var(--ink);
+}
+.jlinks{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.jlink{
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-decoration:none;
+  padding: 7px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  transition: all .2s;
+}
+.jlink:hover{ border-color: var(--ink); color: var(--ink); }
+
+/* ============ SYSTEMS MAP ============ */
+.system-map{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  position: relative;
+}
+@media (max-width: 900px){ .system-map{ grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px){ .system-map{ grid-template-columns: 1fr; } }
+
+.node-card{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px;
+  position:relative;
+}
+.node-card .num{
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--coral);
+}
+.node-card h3{
+  font-size: 19px;
+  margin: 12px 0 10px;
+}
+.node-card p{
+  color: var(--ink-soft);
+  font-size: 15px;
+  margin:0;
+}
+.node-card.wide{ grid-column: span 2; }
+@media (max-width: 900px){ .node-card.wide{ grid-column: span 2; } }
+@media (max-width: 620px){ .node-card.wide{ grid-column: span 1; } }
+
+.map-caption{
+  margin-top: 26px;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+}
+
+/* ============ RESOURCE LIBRARY ============ */
+.resource-cols{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+@media (max-width: 900px){ .resource-cols{ grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px){ .resource-cols{ grid-template-columns: 1fr; } }
+
+.res-col h3{
+  font-size: 15px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--teal);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+}
+.res-col a{
+  display:block;
+  text-decoration:none;
+  color: var(--ink);
+  font-size: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  transition: color .2s, padding-left .2s;
+}
+.res-col a:hover{ color: var(--coral); padding-left: 4px; }
+.res-col a span{ display:block; font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-soft); margin-top: 3px; }
+
+/* ============ RECORDINGS ============ */
+.rec-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 880px){ .rec-grid{ grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px){ .rec-grid{ grid-template-columns: 1fr; } }
+.rec-card{
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 26px;
+  min-height: 150px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition: border-color .2s;
+  background: var(--paper);
+}
+.rec-card:hover{ border-color: var(--teal); }
+.rec-card.has-recording{ border-style: solid; border-color: var(--line); }
+.rec-card.has-recording:hover{ border-color: var(--teal); }
+.rec-card .rmonth{ font-family: var(--font-mono); font-size: 12px; color: var(--teal); }
+.rec-card .rtitle{ font-family: var(--font-display); font-size: 17px; margin-top: 8px; line-height: 1.25; }
+.rec-card .rstate{
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  display:flex;
+  align-items:center;
+  gap: 8px;
+}
+.rec-card .rstate::before{
+  content:"";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--marigold);
+}
+.rec-card .rstate.no-recording::before{
+  background: var(--ink-soft);
+}
+.rec-actions{
+  margin-top: 18px;
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+.rwatch{
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--coral);
+  text-decoration: none;
+}
+.rwatch:hover{ text-decoration: underline; }
+.rcode{
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  background: var(--paper-dim);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 6px 12px;
+  cursor: pointer;
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  transition: border-color .2s, color .2s;
+}
+.rcode:hover{ border-color: var(--teal); color: var(--ink); }
+.rcode .copy-hint{
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--teal);
+}
+.rcode.copied .copy-hint{ color: var(--coral); }
+
+/* ============ FORM ============ */
+.form-shell{
+  background: var(--paper);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  padding: clamp(28px, 5vw, 52px);
+  display:grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 48px;
+}
+@media (max-width: 880px){ .form-shell{ grid-template-columns: 1fr; } }
+
+.form-intro h2{ font-size: clamp(1.7rem, 3vw, 2.2rem); }
+.form-intro p{ color: var(--ink-soft); margin-top: 16px; font-size: 15.5px; }
+.form-intro .tally{
+  margin-top: 28px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--teal);
+}
+
+.field{ margin-bottom: 20px; }
+.field label{
+  display:block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.field .hint{ font-weight: 400; color: var(--ink-soft); }
+.field input, .field textarea, .field select{
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  font-size: 15px;
+  color: var(--ink);
+  resize: vertical;
+}
+.field input:focus, .field textarea:focus, .field select:focus{
+  border-color: var(--teal);
+  outline: none;
+}
+.field-row{ display:flex; gap: 16px; }
+.field-row .field{ flex: 1; }
+
+.form-note{
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top: -6px;
+  margin-bottom: 20px;
+}
+
+.form-success{
+  display:none;
+  background: var(--teal-dim);
+  border: 1px solid var(--teal);
+  border-radius: var(--radius);
+  padding: 26px;
+  text-align:center;
+}
+.form-success h3{ font-size: 20px; margin-bottom: 8px; }
+.form-success p{ color: var(--ink-soft); margin:0; }
+
+/* ============ FOOTER ============ */
+footer{
+  padding: 64px var(--edge) 40px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.footer-grid{
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display:grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #2C3A34;
+}
+@media (max-width: 780px){ .footer-grid{ grid-template-columns: 1fr; } }
+.footer-grid h4{
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--marigold);
+  margin-bottom: 16px;
+}
+.footer-grid p, .footer-grid a{
+  color: #C7D0CB;
+  font-size: 14.5px;
+  text-decoration:none;
+  display:block;
+  margin-bottom: 10px;
+}
+.footer-grid a:hover{ color: var(--paper); }
+.footer-bottom{
+  max-width: var(--max-width);
+  margin: 24px auto 0;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #7E8B85;
+}
+
+/* reveal on scroll */
+.reveal{ opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in{ opacity: 1; transform: translateY(0); }
+
+</style>
+</head>
+<body>
+
+<header class="topnav" id="topnav">
+  <a href="#top" class="mark"><span class="dot"></span> Public Funding Lab</a>
+  <nav>
+    <a href="#why">Why This Existed</a>
+    <a href="#journey">The Journey</a>
+    <a href="#voices">In Their Words</a>
+    <a href="#learned">What We Learned</a>
+    <a href="#resources">Resources</a>
+    <a href="#recordings">Recordings</a>
+    <a href="#tell-us">Tell Us</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div class="reveal in">
+        <div class="eyebrow">League of California Community Foundations &middot; Sept 2025 – Apr 2026</div>
+        <h1>Public dollars don't move on their own. <em>People move them.</em></h1>
+        <p class="lede">For eight months, community foundations across California met to learn how state and federal funding works. Here is what got built, what got learned, and where it points next.</p>
+        <div class="meta-row">
+          <span class="pill"><strong>8</strong> sessions</span>
+          <span class="pill"><strong>7</strong> national and state experts</span>
+          <span class="pill"><strong>39+</strong> community foundations served</span>
+        </div>
+        <div class="hero-cta">
+          <a href="#journey" class="btn btn-solid">Explore the sessions</a>
+          <a href="#tell-us" class="btn btn-outline">Add to the repository</a>
+        </div>
+      </div>
+
+      <div class="stack-wrap" aria-hidden="true">
+        <div class="baseline"></div>
+        <div class="baseline-label">the capital stack</div>
+        <div class="stack-col">
+          <div class="stack-block" style="background:var(--teal); animation-delay:.1s;" data-h="70"></div>
+          <div class="stack-block" style="background:var(--teal-dim); animation-delay:.2s;" data-h="40"></div>
+        </div>
+        <div class="stack-col">
+          <div class="stack-block" style="background:var(--coral); animation-delay:.25s;" data-h="110"></div>
+          <div class="stack-block" style="background:var(--coral-dim); animation-delay:.35s;" data-h="55"></div>
+        </div>
+        <div class="stack-col">
+          <div class="stack-block" style="background:var(--marigold); animation-delay:.15s;" data-h="150"></div>
+          <div class="stack-block" style="background:var(--marigold-dim); animation-delay:.3s;" data-h="60"></div>
+          <div class="stack-block" style="background:var(--ink); animation-delay:.45s;" data-h="30"></div>
+        </div>
+        <div class="stack-col">
+          <div class="stack-block" style="background:var(--coral); animation-delay:.4s;" data-h="85"></div>
+          <div class="stack-block" style="background:var(--teal); animation-delay:.5s;" data-h="45"></div>
+        </div>
+        <div class="stack-col">
+          <div class="stack-block" style="background:var(--marigold); animation-delay:.2s;" data-h="95"></div>
+          <div class="stack-block" style="background:var(--coral-dim); animation-delay:.4s;" data-h="35"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPEAKERS ============ -->
+  <section class="section-pad" style="padding-bottom: 40px;" id="speakers">
+    <div class="wrap">
+      <div class="eyebrow reveal">The people who taught it</div>
+      <div class="speaker-strip">
+        <div class="speaker-card reveal">
+          <div class="avatar" style="background:var(--teal-dim); color:var(--teal);">MK</div>
+          <div class="sname">McKinsey &amp; Company</div>
+          <div class="srole">Dirk Blum, Jennie Nevin, Fadesola Adetosoye</div>
+        </div>
+        <div class="speaker-card reveal">
+          <div class="avatar" style="background:var(--marigold-dim); color:#8A5A0E;">KA</div>
+          <div class="sname">Karen Aceves</div>
+          <div class="srole">Founder &amp; CEO, Arken Strategies</div>
+        </div>
+        <div class="speaker-card reveal">
+          <div class="avatar" style="background:var(--coral-dim); color:var(--coral);">AB</div>
+          <div class="sname">Antony Bugg-Levine</div>
+          <div class="srole">Pioneer, Pay for Success model</div>
+        </div>
+        <div class="speaker-card reveal">
+          <div class="avatar" style="background:var(--teal-dim); color:var(--teal);">VC</div>
+          <div class="sname">Veronica Villalobos Cruz</div>
+          <div class="srole">Cruz Strategies</div>
+        </div>
+        <div class="speaker-card reveal">
+          <div class="avatar" style="background:var(--coral-dim); color:var(--coral);">MA</div>
+          <div class="sname">Martha Aceves Guzman</div>
+          <div class="srole">OVG Consulting</div>
+        </div>
+        <div class="speaker-card reveal">
+          <div class="avatar" style="background:var(--marigold-dim); color:#8A5A0E;">DF</div>
+          <div class="sname">Danielle Fulfs</div>
+          <div class="srole">Senator Schiff's Office</div>
+        </div>
+        <div class="speaker-card reveal">
+          <div class="avatar" style="background:var(--coral-dim); color:var(--coral);">FS</div>
+          <div class="sname">Fran Seegull</div>
+          <div class="srole">President, U.S. Impact Investing Alliance</div>
+        </div>
+        <div class="speaker-card reveal">
+          <div class="avatar" style="background:var(--teal-dim); color:var(--teal);">SM</div>
+          <div class="sname">Sarah Moffat</div>
+          <div class="srole">Managing Partner, Arken Strategies</div>
+        </div>
+        <div class="speaker-card reveal">
+          <div class="avatar" style="background:var(--marigold-dim); color:#8A5A0E;">AT</div>
+          <div class="sname">Andrew Trueblood</div>
+          <div class="srole">Former Planning Director, Washington DC</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY NOW ============ -->
+  <section class="section-pad" id="why">
+    <div class="wrap">
+      <div class="why-grid">
+        <div class="reveal">
+          <div class="eyebrow">Why this existed</div>
+          <h2 style="margin-top:14px; font-size: clamp(1.9rem, 3.4vw, 2.6rem);">Rebuilding years, on purpose.</h2>
+          <div class="why-copy" style="margin-top:24px;">
+            <p>The Lab began as a Greenhouse Gas Reduction Fund program, made possible by the Marin Community Foundation. Then that funding got frozen by the federal administration.</p>
+            <p>The League and Marin's team treated it like the <strong>off season</strong>. A team does not stop training because the game got harder. It gets everyone on the same page, rebuilds fundamentals, and comes back stronger.</p>
+            <p>So the Lab shifted to basics: eight months on how public funding works, start to finish. Some people needed every session. Others needed one. Either way, public funding stopped being intimidating and became a tool people could reach for.</p>
+            <p>Attendees spanned every seat in the building: CEOs, analysts, marketing leads, finance staff. Some stayed for the full arc. Some came for a single month that mattered to them.</p>
+          </div>
+        </div>
+
+        <div class="season-card reveal">
+          <div class="eyebrow">The off season, mapped</div>
+          <p style="color:var(--ink-soft); font-size:15px; margin-top:6px;">Eight months of rebuilding fundamentals before the next funding cycle.</p>
+          <div class="season-track-wrap">
+            <div class="season-track">
+              <div class="season-stop active"><div class="node"></div><div class="lbl">SEP</div></div>
+              <div class="season-stop active"><div class="node"></div><div class="lbl">OCT</div></div>
+              <div class="season-stop active"><div class="node"></div><div class="lbl">NOV</div></div>
+              <div class="season-stop active"><div class="node"></div><div class="lbl">DEC</div></div>
+              <div class="season-stop active"><div class="node"></div><div class="lbl">JAN</div></div>
+              <div class="season-stop active"><div class="node"></div><div class="lbl">FEB</div></div>
+              <div class="season-stop active"><div class="node"></div><div class="lbl">MAR</div></div>
+              <div class="season-stop active"><div class="node"></div><div class="lbl">APR</div></div>
+              <div class="season-line"></div>
+            </div>
+          </div>
+          <p style="margin-top:20px; font-size:14.5px; color:var(--ink-soft);">39+ community foundations. Roles ranging from CEO to analyst. One shared playbook by the end.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ JOURNEY ============ -->
+  <section class="section-pad band-dim" id="journey">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">The journey</div>
+        <h2>Eight months, one system.</h2>
+        <p>Each session built on the last. Click into any month for the topline lesson, the resources that came out of it, and where to go deeper.</p>
+      </div>
+
+      <div class="journey-list">
+
+        <details class="journey-item reveal">
+          <summary class="journey-head">
+            <div class="jmonth">SEP 16</div>
+            <div class="jbody">
+              <div class="jtitle">Why Public Funding, Why Now?
+                <span class="jspeaker">McKinsey &amp; Company</span>
+              </div>
+            </div>
+            <span class="jtag" style="background:var(--marigold-dim);">Orientation</span>
+            <span class="jchevron">+</span>
+          </summary>
+          <div class="journey-panel">
+            <p class="topline">Community foundations remain trusted, place based partners for moving public dollars to the ground, even as the gap between administrations widens. The session's throughline: learn the language this moment rewards, and use it without losing your mission.</p>
+            <ul>
+              <li>Language has shifted. What used to be called climate work is now framed as disaster preparedness. What used to be called equity and DEI is now framed as economic mobility.</li>
+              <li>Understand three beliefs driving federal decisions right now: skepticism of "the way it's always been done," a push to shrink federal agencies to only what's statutorily required, and pressure to show taxpayers a direct return.</li>
+              <li>Public private partnerships are especially attractive under this framing, which plays to a community foundation's strengths.</li>
+              <li>Know what your organization does not do. Say it in one sentence, and let that sentence guide which opportunities you chase.</li>
+            </ul>
+            <p class="jquote">"Economic mobility is everything."</p>
+            <div class="jlinks">
+              <a class="jlink" href="https://www.grants.gov" target="_blank" rel="noopener">Grants.gov</a>
+              <a class="jlink" href="https://www.eda.gov/strategic-initiatives/disaster-recovery/supplemental/2025" target="_blank" rel="noopener">EDA Disaster Supplemental</a>
+              <a class="jlink" href="https://www.lawyersforgoodgovernment.org/climate-change" target="_blank" rel="noopener">Lawyers for Good Government</a>
+              <a class="jlink" href="https://www.sam.gov" target="_blank" rel="noopener">SAM.gov</a>
+            </div>
+          </div>
+        </details>
+
+        <details class="journey-item reveal">
+          <summary class="journey-head">
+            <div class="jmonth">OCT 21</div>
+            <div class="jbody">
+              <div class="jtitle">Public Funding 101: A Level Set
+                <span class="jspeaker">Karen Aceves, Arken Strategies</span>
+              </div>
+            </div>
+            <span class="jtag" style="background:var(--teal-dim);">Fundamentals</span>
+            <span class="jchevron">+</span>
+          </summary>
+          <div class="journey-panel">
+            <p class="topline">Not all grant dollars are the same. Every source comes with its own rules and flexibility, what this field calls the colors of money. Getting fluent in that difference is the real starting point.</p>
+            <ul>
+              <li>Formula grants are allocated automatically, often based on population data. Competitive grants require an application and a case.</li>
+              <li>Never cold apply. Call the agency contact first. It is the fastest way to learn what a winning application looks like, and to hear about adjacent opportunities nobody posts publicly.</li>
+              <li>Elected officials want wins too. A letter of support from your representative costs them little and helps your application stand out.</li>
+            </ul>
+            <div class="jlinks">
+              <a class="jlink" href="https://www.grants.ca.gov" target="_blank" rel="noopener">grants.ca.gov</a>
+              <a class="jlink" href="https://www.grants.gov/learn-grants/grants-101.html" target="_blank" rel="noopener">Grants 101</a>
+              <a class="jlink" href="https://www.managementconcepts.com/training/training-topics/grants-assistance/" target="_blank" rel="noopener">Grants management training</a>
+            </div>
+          </div>
+        </details>
+
+        <details class="journey-item reveal">
+          <summary class="journey-head">
+            <div class="jmonth">NOV 18</div>
+            <div class="jbody">
+              <div class="jtitle">Impact Investing: Financing Social Change
+                <span class="jspeaker">Antony Bugg-Levine</span>
+              </div>
+            </div>
+            <span class="jtag" style="background:var(--coral-dim);">Capital Stacking</span>
+            <span class="jchevron">+</span>
+          </summary>
+          <div class="journey-panel">
+            <p class="topline">Foundations are financial entities as much as mission driven ones. Treating that as a fact, not a tension, changes how you organize capital.</p>
+            <ul>
+              <li><strong>Build dollars</strong> support the organization itself: staffing up, figuring out what a community needs, filling revenue gaps, scaling.</li>
+              <li><strong>Buy dollars</strong> support the programs foundations run: after school programs, food banks, wildfire recovery.</li>
+              <li>Government is the best buyer of proven outcomes, but it rarely funds the build side. Match government buy money with donors willing to fund build.</li>
+              <li>Pitch a build funder with a build story and a buy funder with a buy story. Cultivate trust with a funding source long before you need their capital.</li>
+              <li>The number of billionaires grew from roughly 800 to 1,100 in a single year. There is real, uncommitted generosity on the sidelines waiting to be organized.</li>
+            </ul>
+            <div class="jlinks">
+              <a class="jlink" href="https://nff.org/" target="_blank" rel="noopener">Nonprofit Finance Fund</a>
+            </div>
+          </div>
+        </details>
+
+        <details class="journey-item reveal">
+          <summary class="journey-head">
+            <div class="jmonth">DEC 16</div>
+            <div class="jbody">
+              <div class="jtitle">State Funding Deep Dive
+                <span class="jspeaker">Veronica Villalobos Cruz &amp; Martha Aceves Guzman</span>
+              </div>
+            </div>
+            <span class="jtag" style="background:var(--marigold-dim);">State Dollars</span>
+            <span class="jchevron">+</span>
+          </summary>
+          <div class="journey-panel">
+            <p class="topline">California faces a projected budget deficit, and real opportunity remains anyway, especially around climate. Protecting what you already have matters as much as chasing what's new.</p>
+            <ul>
+              <li>Prop 4, the Climate Bond, holds a $10 billion pot with grant opportunities tied to it.</li>
+              <li>Cap and Invest moves roughly $1 billion annually, including $85 million earmarked for climate focused technological innovation.</li>
+              <li>Advocacy that works: stick together in coalitions, build relationships with legislative staff early and stay patient, bring data and real community examples, and track budget and legislative calendars so your timing lines up.</li>
+              <li>Engage electeds outside the standard meeting: honor them with an award, invite them to a ribbon cutting, or give them a keynote slot.</li>
+            </ul>
+            <div class="jlinks">
+              <a class="jlink" href="https://bondaccountability.resources.ca.gov/Propositions/Proposition_4_Climate_Bond" target="_blank" rel="noopener">Climate Bond tracker</a>
+              <a class="jlink" href="https://www.caclimateinvestments.ca.gov/" target="_blank" rel="noopener">Cap-and-Invest programs</a>
+            </div>
+          </div>
+        </details>
+
+        <details class="journey-item reveal">
+          <summary class="journey-head">
+            <div class="jmonth">JAN 20</div>
+            <div class="jbody">
+              <div class="jtitle">Federal Funding Deep Dive
+                <span class="jspeaker">Danielle Fulfs, Senator Schiff's Office</span>
+              </div>
+            </div>
+            <span class="jtag" style="background:var(--teal-dim);">Federal Dollars</span>
+            <span class="jchevron">+</span>
+          </summary>
+          <div class="journey-panel">
+            <p class="topline">A staffer's-eye view of how appropriations work. Danielle walked the room through congressional apportionments, how funding requests get submitted, the budget cycle across bills, and what happens once you're funded.</p>
+            <ul>
+              <li>A follow up webinar ran the moment funding requests opened, so members could act while it was fresh.</li>
+              <li>At least one participating foundation has already submitted a request, currently in process.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="journey-item reveal">
+          <summary class="journey-head">
+            <div class="jmonth">FEB 17</div>
+            <div class="jbody">
+              <div class="jtitle">Making the Pitch
+                <span class="jspeaker">Fran Seegull</span>
+              </div>
+            </div>
+            <span class="jtag" style="background:var(--coral-dim);">Narrative</span>
+            <span class="jchevron">+</span>
+          </summary>
+          <div class="journey-panel">
+            <p class="topline">California foundations hold more national influence than most realize. The work is to decide, deliberately, what to defend and what to push forward, and to claim the space accordingly.</p>
+            <ul>
+              <li>Other states already look to California as a direction setter. Nobody else is telling California's story at the national tables that matter, which leaves the story open to claim.</li>
+              <li>Larger foundations should sponsor smaller ones and bring legislators to the table, rather than every foundation showing up alone.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="journey-item reveal">
+          <summary class="journey-head">
+            <div class="jmonth">MAR 17</div>
+            <div class="jbody">
+              <div class="jtitle">Open Lab Q&amp;A
+                <span class="jspeaker">Sarah Moffat, Arken Strategies</span>
+              </div>
+            </div>
+            <span class="jtag" style="background:var(--marigold-dim);">Practice</span>
+            <span class="jchevron">+</span>
+          </summary>
+          <div class="journey-panel">
+            <p class="topline">An open floor, mostly spent on one question: how do you approach a legislator? The answer that stuck: partner with them long before you have an ask, and build the relationship on its own terms first.</p>
+          </div>
+        </details>
+
+        <details class="journey-item reveal">
+          <summary class="journey-head">
+            <div class="jmonth">APR 21</div>
+            <div class="jbody">
+              <div class="jtitle">From Vision to Viability
+                <span class="jspeaker">Andrew Trueblood</span>
+              </div>
+            </div>
+            <span class="jtag" style="background:var(--teal-dim);">Execution</span>
+            <span class="jchevron">+</span>
+          </summary>
+          <div class="journey-panel">
+            <p class="topline">A closing look at what makes economic development and community projects work, drawn from projects across the country. The center of it: sustainability and infrastructure planning, and honest lessons on why some projects hold up and others don't.</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ IN THEIR OWN WORDS ============ -->
+  <section class="section-pad" id="voices">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">In their own words</div>
+        <h2>What the room actually took away.</h2>
+        <p>Every session closed with the same question: what did you learn? These are unedited answers from the people who showed up.</p>
+      </div>
+
+      <div class="voice-grid">
+        <div class="voice-card reveal" style="border-color:var(--teal);">
+          <p class="vquote">"Language is so important. Follow the money, and use the language of the moment."</p>
+        </div>
+        <div class="voice-card reveal" style="border-color:var(--coral);">
+          <p class="vquote">"Using the language of the moment matters when applying. It doesn't change the impact we'll make."</p>
+        </div>
+        <div class="voice-card reveal" style="border-color:var(--marigold);">
+          <p class="vquote">"The right grants to apply for: formula versus discretionary, and the two books."</p>
+        </div>
+        <div class="voice-card reveal" style="border-color:var(--teal);">
+          <p class="vquote">"Where these websites actually are."</p>
+        </div>
+        <div class="voice-card reveal" style="border-color:var(--coral);">
+          <p class="vquote">"The basics on how and when legislation is passed, how and why to engage our state reps, and a closer look at the Climate Bond."</p>
+        </div>
+        <div class="voice-card reveal" style="border-color:var(--marigold);">
+          <p class="vquote">"The Prop 4 funding pie chart, and the website link."</p>
+        </div>
+        <div class="voice-card reveal" style="border-color:var(--teal);">
+          <p class="vquote">"The Code of Federal Regulations: how to access and use it, and where to find stats to support grant applications."</p>
+        </div>
+        <div class="voice-card reveal" style="border-color:var(--coral);">
+          <p class="vquote">"Community foundations need to be confident and know that they are the pulse of a region."</p>
+        </div>
+        <div class="voice-card reveal" style="border-color:var(--marigold);">
+          <p class="vquote">"Strategy on lead generation and collaboration."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT WE LEARNED ============ -->
+  <section class="section-pad band-ink" id="learned">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow" style="color:var(--marigold);">What we learned</div>
+        <h2>Five ideas, one system.</h2>
+        <p>Five ideas surfaced again and again across eight sessions. Together they form a system, each one reinforcing the others.</p>
+      </div>
+
+      <div class="system-map">
+        <div class="node-card reveal">
+          <div class="num">01</div>
+          <h3>Build the repository</h3>
+          <p>A standing, low stakes place to learn: a playbook, short videos, a lesson archive, and a support group that meets monthly or quarterly. Public funding should never be the barrier between a community and its resources.</p>
+        </div>
+        <div class="node-card reveal">
+          <div class="num">02</div>
+          <h3>Larger foundations fund smaller ones first</h3>
+          <p>Before spending capacity on national tables, larger California foundations should fund the state foundations that need it. A stronger bench statewide strengthens every individual seat too.</p>
+        </div>
+        <div class="node-card reveal">
+          <div class="num">03</div>
+          <h3>One statewide table</h3>
+          <p>A dedicated space for statewide strategy and voice, so that when foundations sit down with legislators, they're working from the same playbook and the same language.</p>
+        </div>
+        <div class="node-card wide reveal">
+          <div class="num">04</div>
+          <h3>Train finance staff before the need arises</h3>
+          <p>Budget and grants training for state and federal dollars should happen well ahead of a live opportunity. Finance staff especially need fluency long before the deadline hits.</p>
+        </div>
+        <div class="node-card reveal">
+          <div class="num">05</div>
+          <h3>Own the story</h3>
+          <p>Every foundation needs its own story, and California foundations need a collective one. Storytelling, branding, and talking points secure a seat at the table.</p>
+        </div>
+      </div>
+
+      <p class="map-caption ink-soft">These five ideas function as a system. A repository works only if people are trained to use it. A statewide table works only if the story behind it is clear. Both collapse if smaller foundations get left behind.</p>
+    </div>
+  </section>
+
+  <!-- ============ RESOURCES ============ -->
+  <section class="section-pad" id="resources">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Resource library</div>
+        <h2>Everything in one place.</h2>
+        <p>The tools, contacts, and starting points that came up across all eight sessions, grouped by where you're likely to need them.</p>
+      </div>
+
+      <div class="resource-cols">
+        <div class="res-col reveal">
+          <h3>Grants Basics</h3>
+          <a href="https://www.grants.gov" target="_blank" rel="noopener">Grants.gov<span>Federal grant opportunities, one stop shop</span></a>
+          <a href="https://www.grants.ca.gov" target="_blank" rel="noopener">grants.ca.gov<span>State grant opportunities</span></a>
+          <a href="https://www.sam.gov" target="_blank" rel="noopener">SAM.gov<span>Required registration before you submit</span></a>
+          <a href="https://www.grants.gov/learn-grants/grants-101.html" target="_blank" rel="noopener">Grants 101<span>Start here if funding is new to you</span></a>
+        </div>
+        <div class="res-col reveal">
+          <h3>State &amp; Climate Funding</h3>
+          <a href="https://bondaccountability.resources.ca.gov/Propositions/Proposition_4_Climate_Bond" target="_blank" rel="noopener">Prop 4 Climate Bond<span>$10B tracker and grant opportunities</span></a>
+          <a href="https://www.caclimateinvestments.ca.gov/" target="_blank" rel="noopener">Cap-and-Invest<span>Includes $85M for climate tech innovation</span></a>
+          <a href="https://www.eda.gov/strategic-initiatives/disaster-recovery/supplemental/2025" target="_blank" rel="noopener">EDA Disaster Supplemental<span>Up to $50M for disaster declared areas</span></a>
+        </div>
+        <div class="res-col reveal">
+          <h3>Legal &amp; Capital Support</h3>
+          <a href="https://www.lawyersforgoodgovernment.org/elective-pay-ira-tax-incentives" target="_blank" rel="noopener">Direct Pay technical assistance<span>Free help via Lawyers for Good Government</span></a>
+          <a href="https://www.lawyersforgoodgovernment.org/federal-fund-protection-initiative" target="_blank" rel="noopener">Federal Fund Protection Initiative<span>If a program you rely on is at risk</span></a>
+          <a href="https://nff.org/" target="_blank" rel="noopener">Nonprofit Finance Fund<span>Capital, consulting and advocacy resources</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RECORDINGS ============ -->
+  <section class="section-pad band-dim" id="recordings">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="eyebrow">Session recordings</div>
+        <h2>Watch any session, anytime.</h2>
+        <p>Each recording is passcode protected. Copy the passcode, follow the link, and paste it in when Zoom asks.</p>
+      </div>
+      <div class="rec-grid">
+        <div class="rec-card reveal has-recording">
+          <div>
+            <div class="rmonth">SEP 3</div>
+            <div class="rtitle">Orientation and Program Overview</div>
+          </div>
+          <div class="rec-actions">
+            <a href="https://us02web.zoom.us/rec/share/_15-OZW_3CkhQO3-SoAvmEQFcgV8vsMwUbp2yfEID2f-bXyjMdt8mnRwgFIvV2Yt.8qIEPZWJMmy-O1h5?startTime=1756933423000" target="_blank" rel="noopener" class="rwatch">Watch recording →</a>
+            <button type="button" class="rcode" data-code="3s1njHw?">Passcode: 3s1njHw? <span class="copy-hint">copy</span></button>
+          </div>
+        </div>
+
+        <div class="rec-card reveal has-recording">
+          <div>
+            <div class="rmonth">SEP 16</div>
+            <div class="rtitle">Why Public Funding, Why Now?</div>
+          </div>
+          <div class="rec-actions">
+            <a href="https://us02web.zoom.us/rec/share/DnpYEbphtlZmoY-tDX9xtV7sscvIxWBTVembeCKRXaFFnxvGYbX4IYXMBKd58ZHl.9m9-EvFZMfhud6O7?startTime=1758056616000" target="_blank" rel="noopener" class="rwatch">Watch recording →</a>
+            <button type="button" class="rcode" data-code="0&amp;BVj9g6">Passcode: 0&amp;BVj9g6 <span class="copy-hint">copy</span></button>
+          </div>
+        </div>
+
+        <div class="rec-card reveal has-recording">
+          <div>
+            <div class="rmonth">OCT 21</div>
+            <div class="rtitle">Public Funding 101</div>
+          </div>
+          <div class="rec-actions">
+            <a href="https://us02web.zoom.us/rec/share/S1ZFAECpi0Zj_iQadL8YwwOXTcE-TJxdAKRHqV2sfkP_CJe8Mi1IQBwUrRfjFmKR.MZUSMpTQwuALbBll?startTime=1761080770000" target="_blank" rel="noopener" class="rwatch">Watch recording →</a>
+            <button type="button" class="rcode" data-code="YohV!VT3">Passcode: YohV!VT3 <span class="copy-hint">copy</span></button>
+          </div>
+        </div>
+
+        <div class="rec-card reveal has-recording">
+          <div>
+            <div class="rmonth">NOV 18</div>
+            <div class="rtitle">Impact Investing: The Power of Community Foundations</div>
+          </div>
+          <div class="rec-actions">
+            <a href="https://us02web.zoom.us/rec/share/FE8lStN0O6AJTez6bW_DLBEAMGiQnyGhivFHuLqf-or67RAn5gp-1zdcGgdWLEiX.4KXhxCKcepgkGkil?startTime=1763503532000" target="_blank" rel="noopener" class="rwatch">Watch recording →</a>
+            <button type="button" class="rcode" data-code="F7A?5U*u">Passcode: F7A?5U*u <span class="copy-hint">copy</span></button>
+          </div>
+        </div>
+
+        <div class="rec-card reveal has-recording">
+          <div>
+            <div class="rmonth">DEC 16</div>
+            <div class="rtitle">State Funding Deep Dive</div>
+          </div>
+          <div class="rec-actions">
+            <a href="https://us02web.zoom.us/rec/share/VXJOdlAjHz7LXVifBHXcgM4ykbljqOJXUJLnjvYJ3oGKYA8zjWQPvs16XRumRQ.KuNAtmCIhIeWWaTV?startTime=1765922637000" target="_blank" rel="noopener" class="rwatch">Watch recording →</a>
+            <button type="button" class="rcode" data-code="9*+#FUs6">Passcode: 9*+#FUs6 <span class="copy-hint">copy</span></button>
+          </div>
+        </div>
+
+        <div class="rec-card reveal has-recording">
+          <div>
+            <div class="rmonth">JAN 27</div>
+            <div class="rtitle">Understanding the Federal Funding Environment</div>
+          </div>
+          <div class="rec-actions">
+            <a href="https://us02web.zoom.us/rec/share/9FeCLsgu1pnev7gOxIvC_a2CkD7Nvu7KyLfZQnI4zpBspdqz1n_UvRceE0XKmN1n._aBxPUWJzI-mVUCq?startTime=1769551393000" target="_blank" rel="noopener" class="rwatch">Watch recording →</a>
+            <button type="button" class="rcode" data-code="CRv%8Qg4">Passcode: CRv%8Qg4 <span class="copy-hint">copy</span></button>
+          </div>
+        </div>
+
+        <div class="rec-card reveal has-recording">
+          <div>
+            <div class="rmonth">FEB 17</div>
+            <div class="rtitle">Impact Investing in Unprecedented Times</div>
+          </div>
+          <div class="rec-actions">
+            <a href="https://us02web.zoom.us/rec/share/zAvdWySg6NT5VN2CF4671oCUxl0jWJDKOjgHMrJQ9VLyWt77vcnUyzNJZWJv_7HI.PLgHROX4UP9nsvZR?startTime=1771365782000" target="_blank" rel="noopener" class="rwatch">Watch recording →</a>
+            <button type="button" class="rcode" data-code="q5Xws^q.">Passcode: q5Xws^q. <span class="copy-hint">copy</span></button>
+          </div>
+        </div>
+
+        <div class="rec-card reveal">
+          <div>
+            <div class="rmonth">MAR 17</div>
+            <div class="rtitle">Open Lab Q&amp;A</div>
+          </div>
+          <div class="rstate no-recording">This session was not recorded</div>
+        </div>
+
+        <div class="rec-card reveal has-recording">
+          <div>
+            <div class="rmonth">APR 21</div>
+            <div class="rtitle">From Vision to Viability</div>
+          </div>
+          <div class="rec-actions">
+            <a href="https://us02web.zoom.us/rec/share/-sr1NQNe_QnHTv5lTiMjWk0feUZo1OodML1jzV-HJo29Yxfc6nHtlQcNytmxypxO.449JydpAHHK2q8j-?startTime=1776805766000" target="_blank" rel="noopener" class="rwatch">Watch recording →</a>
+            <button type="button" class="rcode" data-code="4@$+uzhB">Passcode: 4@$+uzhB <span class="copy-hint">copy</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TELL US / REPOSITORY FORM ============ -->
+  <section class="section-pad" id="tell-us">
+    <div class="wrap">
+      <div class="form-shell reveal">
+        <div class="form-intro">
+          <div class="eyebrow">Add to the repository</div>
+          <h2 style="margin-top:14px;">What did you learn? What are you still stuck on?</h2>
+          <p>Every answer here joins the shared repository the Lab kept pointing toward: a living record of what California foundations know, and what they still need.</p>
+          <div class="tally">→ Responses feed the office hours and peer circle agendas</div>
+        </div>
+
+        <div>
+          <form id="pfl-form" name="pfl-repository" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="pfl-repository" />
+            <p style="display:none;"><label>Don't fill this out if you're human: <input name="bot-field" /></label></p>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="fname">Name <span class="hint">(optional)</span></label>
+                <input type="text" id="fname" name="name" placeholder="Your name">
+              </div>
+              <div class="field">
+                <label for="forg">Foundation <span class="hint">(optional)</span></label>
+                <input type="text" id="forg" name="foundation" placeholder="Your foundation">
+              </div>
+            </div>
+            <div class="field">
+              <label for="femail">Email <span class="hint">(optional, if you want a reply)</span></label>
+              <input type="email" id="femail" name="email" placeholder="you@foundation.org">
+            </div>
+            <div class="field">
+              <label for="flearn">What's one thing you learned or put into practice?</label>
+              <textarea id="flearn" name="learned" rows="3" placeholder="A lesson, a tactic, a resource you actually used"></textarea>
+            </div>
+            <div class="field">
+              <label for="fquestion">What questions do you still have about public funding?</label>
+              <textarea id="fquestion" name="question" rows="3" placeholder="What's still unclear, or where are you stuck"></textarea>
+            </div>
+            <p class="form-note">Submissions go straight to the Lab's team. Nothing is published without asking you first.</p>
+            <button type="submit" class="btn btn-solid" style="width:100%; justify-content:center;">Submit to the repository</button>
+          </form>
+
+          <div class="form-success" id="form-success">
+            <h3>Added to the repository.</h3>
+            <p>Thank you. This is exactly how the Lab keeps working after the last session ends.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>The Public Funding Lab</h4>
+      <p style="max-width: 42ch;">An eight month series built for the League of California Community Foundations, run in partnership with Arken Strategies, and made possible by the Marin Community Foundation.</p>
+    </div>
+    <div>
+      <h4>Key Contacts</h4>
+      <a href="mailto:karen@arkeninc.com">karen@arkeninc.com</a>
+      <a href="mailto:sarah@arkeninc.com">sarah@arkeninc.com</a>
+      <a href="mailto:sheila@lccf.org">sheila@lccf.org</a>
+    </div>
+    <div>
+      <h4>Jump To</h4>
+      <a href="#why">Why This Existed</a>
+      <a href="#journey">The Journey</a>
+      <a href="#learned">What We Learned</a>
+      <a href="#tell-us">Tell Us</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>League of California Community Foundations</span>
+    <span>Built from eight sessions, September 2025 to April 2026</span>
+  </div>
+</footer>
+
+<script>
+// ============ NAV SCROLL STATE ============
+const topnav = document.getElementById('topnav');
+window.addEventListener('scroll', () => {
+  topnav.classList.toggle('scrolled', window.scrollY > 12);
+}, { passive: true });
+
+// ============ STACK BLOCK HEIGHTS (signature hero element) ============
+document.querySelectorAll('.stack-block').forEach(block => {
+  const h = block.getAttribute('data-h');
+  if (h) block.style.height = h + 'px';
+});
+
+// ============ SCROLL REVEAL ============
+const revealEls = document.querySelectorAll('.reveal');
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => io.observe(el));
+} else {
+  revealEls.forEach(el => el.classList.add('in'));
+}
+
+// ============ ONLY ONE JOURNEY ITEM OPEN AT A TIME (nice on mobile) ============
+const journeyItems = document.querySelectorAll('.journey-item');
+journeyItems.forEach(item => {
+  item.addEventListener('toggle', () => {
+    if (item.open) {
+      journeyItems.forEach(other => {
+        if (other !== item) other.open = false;
+      });
+    }
+  });
+});
+
+// ============ COPY ZOOM PASSCODE ============
+document.querySelectorAll('.rcode').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const code = btn.getAttribute('data-code');
+    const hint = btn.querySelector('.copy-hint');
+    const restore = hint ? hint.textContent : 'copy';
+
+    function flash() {
+      btn.classList.add('copied');
+      if (hint) hint.textContent = 'copied';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        if (hint) hint.textContent = restore;
+      }, 1400);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(flash).catch(flash);
+    } else {
+      flash();
+    }
+  });
+});
+
+// ============ NETLIFY FORM: AJAX SUBMIT WITH INLINE SUCCESS ============
+const pflForm = document.getElementById('pfl-form');
+const pflSuccess = document.getElementById('form-success');
+
+function encodeForm(data) {
+  return Object.keys(data)
+    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&');
+}
+
+if (pflForm) {
+  pflForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(pflForm);
+    const payload = {};
+    formData.forEach((value, key) => { payload[key] = value; });
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encodeForm(payload)
+    })
+      .then(() => {
+        pflForm.style.display = 'none';
+        pflSuccess.style.display = 'block';
+      })
+      .catch(() => {
+        // Fallback: if the AJAX post fails (e.g. running outside Netlify),
+        // submit the form normally so Netlify's own handling can take over.
+        pflForm.submit();
+      });
+  });
+}
+
+</script>
+</body>
+</html>
