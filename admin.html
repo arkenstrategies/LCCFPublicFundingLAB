@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff | The Public Funding Lab</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:        #FFFBF1;
+    --paper-dim:    #F4EEDC;
+    --ink:          #17241F;
+    --ink-soft:     #45564E;
+    --marigold:     #F2A63B;
+    --marigold-dim: #FCE7C2;
+    --teal:         #0B6E5F;
+    --teal-dim:     #D7ECE6;
+    --coral:        #E85234;
+    --coral-dim:    #FADAD1;
+    --line:         #D9D0B8;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body:    "Work Sans", -apple-system, sans-serif;
+    --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+    --radius: 14px;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.55;
+  }
+  .wrap{ max-width: 900px; margin: 0 auto; padding: 48px 24px 100px; }
+  h1{ font-family: var(--font-display); font-weight:600; font-size: clamp(1.8rem, 4vw, 2.4rem); margin: 0 0 6px; }
+  .backlink{ font-family: var(--font-mono); font-size: 12.5px; color: var(--teal); text-decoration:none; }
+  .sub{ color: var(--ink-soft); margin: 14px 0 28px; font-size: 15px; }
+  .toolbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: 24px; flex-wrap:wrap; }
+  .count{ font-family: var(--font-mono); font-size: 13px; color: var(--ink-soft); }
+  button.refresh{
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 100px;
+    padding: 9px 16px;
+    cursor:pointer;
+  }
+  button.refresh:hover{ background: var(--coral); }
+
+  .entry{
+    background: var(--paper-dim);
+    border-left: 3px solid var(--teal);
+    border-radius: 8px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+  .entry .meta{
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    display:flex;
+    gap: 14px;
+    flex-wrap:wrap;
+    margin-bottom: 10px;
+  }
+  .entry .meta strong{ color: var(--ink); }
+  .entry .block{ margin-bottom: 10px; }
+  .entry .block:last-child{ margin-bottom:0; }
+  .entry .label{
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--coral);
+    margin-bottom: 4px;
+  }
+  .entry .value{ font-size: 15px; color: var(--ink); }
+  .entry .value.empty{ color: var(--ink-soft); font-style: italic; }
+
+  .state-msg{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 40px 0;
+    text-align:center;
+  }
+  .state-msg.error{ color: var(--coral); }
+
+  /* gate, matches main site */
+  #gate{ position:fixed; inset:0; z-index:500; background:var(--ink); display:flex; align-items:center; justify-content:center; padding:24px; }
+  #gate.hidden{ display:none; }
+  body.gate-locked{ overflow:hidden; }
+  .gate-card{ width:100%; max-width:380px; background:var(--paper); border-radius:var(--radius); padding:36px 32px; text-align:center; }
+  .gate-card .mark{ font-family: var(--font-display); font-weight:700; font-size:19px; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .gate-card .dot{ width:10px; height:10px; border-radius:3px; background:var(--coral); transform:rotate(45deg); display:inline-block; margin-right:8px; }
+  .gate-card p{ color: var(--ink-soft); font-size: 14.5px; margin: 14px 0 20px; }
+  #gate-input{ width:100%; padding:13px 14px; border-radius:8px; border:1.5px solid var(--line); font-size:15px; text-align:center; }
+  #gate-input:focus{ outline:none; border-color:var(--teal); }
+  #gate-error{ display:none; color:var(--coral); font-size:13px; margin:12px 0 0; }
+  #gate-error.show{ display:block; }
+  .gate-submit{
+    width:100%; margin-top:12px; padding:13px; border-radius:100px; border:1.5px solid var(--ink);
+    background:var(--ink); color:var(--paper); font-weight:700; font-size:15px; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a href="index.html" class="backlink">← Back to the site</a>
+  <h1>What the Lab still needs to know.</h1>
+  <p class="sub">Every question and resource submitted through the "Tell Us" form on the main site, newest first. This page isn't linked from search or the main nav on purpose.</p>
+
+  <div class="toolbar">
+    <div class="count" id="count">Loading…</div>
+    <button class="refresh" id="refresh">Refresh</button>
+  </div>
+
+  <div id="entries"></div>
+</div>
+
+<div id="gate">
+  <div class="gate-card">
+    <div class="mark"><span class="dot"></span> Public Funding Lab — Staff</div>
+    <p>Enter the site password to view submissions.</p>
+    <form id="gate-form">
+      <input type="password" id="gate-input" placeholder="Password" autocomplete="off">
+      <button type="submit" class="gate-submit">Enter</button>
+      <p id="gate-error">That's not it. Try again.</p>
+    </form>
+  </div>
+</div>
+
+<script>
+  window.PFL_CONFIG = {
+    SITE_PASSWORD: "lccf",
+    SUBMISSIONS_ENDPOINT: "PASTE_YOUR_APPS_SCRIPT_URL_HERE"
+  };
+</script>
+<script>
+  // ---- gate (same password as the main site) ----
+  (function () {
+    const gate = document.getElementById('gate');
+    const gateForm = document.getElementById('gate-form');
+    const gateInput = document.getElementById('gate-input');
+    const gateError = document.getElementById('gate-error');
+    const cfg = window.PFL_CONFIG || {};
+    const correctPassword = (cfg.SITE_PASSWORD || '').trim().toLowerCase();
+
+    function unlock() {
+      gate.classList.add('hidden');
+      document.body.classList.remove('gate-locked');
+      loadEntries();
+    }
+
+    if (localStorage.getItem('pfl_unlocked') === 'true') {
+      unlock();
+    } else {
+      document.body.classList.add('gate-locked');
+      setTimeout(() => gateInput.focus(), 100);
+    }
+
+    gateForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const entered = (gateInput.value || '').trim().toLowerCase();
+      if (entered && entered === correctPassword) {
+        localStorage.setItem('pfl_unlocked', 'true');
+        gateError.classList.remove('show');
+        unlock();
+      } else {
+        gateError.classList.add('show');
+        gateInput.value = '';
+        gateInput.focus();
+      }
+    });
+  })();
+
+  // ---- load submissions ----
+  function fmtDate(value) {
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return value || '';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+      ' · ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  }
+
+  function renderEntries(rows) {
+    const container = document.getElementById('entries');
+    const count = document.getElementById('count');
+    container.innerHTML = '';
+
+    if (!rows || rows.length === 0) {
+      count.textContent = 'No submissions yet';
+      container.innerHTML = '<div class="state-msg">Nothing here yet. Once someone submits the form, it shows up on this page.</div>';
+      return;
+    }
+
+    // newest first
+    rows.sort((a, b) => new Date(b.Timestamp || b.timestamp || 0) - new Date(a.Timestamp || a.timestamp || 0));
+    count.textContent = rows.length + (rows.length === 1 ? ' submission' : ' submissions');
+
+    rows.forEach(row => {
+      const name = row.Name || row.name || '';
+      const foundation = row.Foundation || row.foundation || '';
+      const email = row.Email || row.email || '';
+      const question = row.Question || row.question || '';
+      const resource = row.Resource || row.resource || '';
+      const timestamp = row.Timestamp || row.timestamp || '';
+
+      const who = [name, foundation].filter(Boolean).join(', ') || 'Anonymous';
+
+      const el = document.createElement('div');
+      el.className = 'entry';
+      el.innerHTML =
+        '<div class="meta">' +
+          '<span><strong>' + escapeHtml(who) + '</strong></span>' +
+          (email ? '<span>' + escapeHtml(email) + '</span>' : '') +
+          '<span>' + escapeHtml(fmtDate(timestamp)) + '</span>' +
+        '</div>' +
+        '<div class="block"><div class="label">Question</div><div class="value' + (question ? '' : ' empty') + '">' + (question ? escapeHtml(question) : 'Not answered') + '</div></div>' +
+        '<div class="block"><div class="label">Resource</div><div class="value' + (resource ? '' : ' empty') + '">' + (resource ? escapeHtml(resource) : 'Not answered') + '</div></div>';
+      container.appendChild(el);
+    });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function loadEntries() {
+    const cfg = window.PFL_CONFIG || {};
+    const endpoint = cfg.SUBMISSIONS_ENDPOINT || '';
+    const container = document.getElementById('entries');
+    const count = document.getElementById('count');
+
+    if (!endpoint || endpoint.indexOf('PASTE_YOUR_APPS_SCRIPT_URL_HERE') !== -1) {
+      count.textContent = '';
+      container.innerHTML = '<div class="state-msg error">The repository isn\'t connected yet. Add your Google Apps Script URL to SUBMISSIONS_ENDPOINT in both index.html and admin.html, see the README.</div>';
+      return;
+    }
+
+    count.textContent = 'Loading…';
+    container.innerHTML = '';
+
+    fetch(endpoint)
+      .then(res => res.json())
+      .then(renderEntries)
+      .catch(() => {
+        count.textContent = '';
+        container.innerHTML = '<div class="state-msg error">Couldn\'t load submissions. Check the Apps Script URL and that it\'s deployed with access set to "Anyone."</div>';
+      });
+  }
+
+  document.getElementById('refresh').addEventListener('click', loadEntries);
+</script>
+
+</body>
+</html>
